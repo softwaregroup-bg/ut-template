@@ -2,6 +2,6 @@
   "name": "ut-template",
   "version": "5.0.0",
   "dependencies": {
-    "ut-bus": "~5.0.0"
+    "marko":"*"
   }
 }
