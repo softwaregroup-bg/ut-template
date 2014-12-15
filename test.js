@@ -1,15 +1,15 @@
 var template = require('marko').load('async-tmpl.html');
 
-
-
 var data = {
-    colors:[],
-    "predefFunct":function(out, next){//next is callback with error,data params
-
-      setTimeout(function(){
-        next(undefined,{"firstName":'desi',"lastName":'tsolova'});//error
-      },1000);
-
+    name: 'Frank',
+    count: 30,
+    colors:['red','green','blue'],
+    userDataProvider: function(data, callback){
+        setTimeout(function(){
+            callback(new Error('abc'));
+            // callback(null, {"a":"a","b":'b'});
+            // console.log(data);
+        },1000);
     }
 };
 

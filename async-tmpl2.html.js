@@ -10,8 +10,8 @@ module.exports = function create(__helpers) {
     _tag(out,
       marko_node_modules_marko_async_async_fragment_tag,
       {
-        "dataProvider": data.userDataProvider,
-        "_name": "data.userDataProvider",
+        "dataProvider": data.sgmessage,
+        "_name": "data.sgmessage",
         "arg": {"testarg0": "0", "testarg1": "1", "testarg2": "1"},
         "errorMessage": out.captureString(function() {
             out.w('An error occurred!');
