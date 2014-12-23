@@ -5,11 +5,12 @@ var data = {
     count: 30,
     colors:['red','green','blue'],
     userDataProvider: function(data, callback){
-        setTimeout(function(){
-            callback(new Error('abc'));
-            // callback(null, {"a":"a","b":'b'});
-            // console.log(data);
-        },1000);
+        // setTimeout(function(){
+        //     callback(new Error('abc'));
+        //     // callback(null, {"a":"a","b":'b'});
+        //     // console.log(data);
+        // },400);
+        callback({"a":"a","b":'b'});
     }
 };
 
