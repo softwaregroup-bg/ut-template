@@ -2,6 +2,6 @@
   "name": "ut-template",
   "version": "5.0.0",
   "dependencies": {
-    "marko":"~1.5.4"
+    "marko": "~1.5.8"
   }
 }
