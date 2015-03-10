@@ -1,0 +1,10 @@
+{
+  "tags": {
+    "*": {
+      "transformer": {
+         "path":"./transformer",
+         "priority": -1
+      }
+    }
+  }
+}

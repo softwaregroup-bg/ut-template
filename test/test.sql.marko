@@ -1,0 +1,11 @@
+--select user data
+<ut-security:login var="l" userName=${params.username}>
+    <ut-namespace:method var="y" x="${l.result}">
+SELECT
+  *,${'test'+y.result} [namespace.method.result]
+FROM
+  users
+WHERE
+  id = $l.result
+    </ut-namespace:method>
+</ut-security:login>

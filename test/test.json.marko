@@ -1,0 +1,8 @@
+<ut-security:login var="l" userName="admin">
+    <ut-namespace:method var="y" x="${l.result}">
+    {
+        "security.login.result":${l.result}
+        "namespace.method.result":${y.result}
+    }
+    </ut-namespace:method>
+</ut-security:login>

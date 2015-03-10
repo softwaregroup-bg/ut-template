@@ -2,6 +2,7 @@
   "name": "ut-template",
   "version": "5.0.0",
   "dependencies": {
-    "marko": "~1.5.8"
+    "view-engine": "~1.1.0",
+    "ut-bus": "~5.0.0"
   }
 }
