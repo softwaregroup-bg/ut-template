@@ -43,6 +43,7 @@ Here are the enhancements to the Marko engine
     ```xml
     <ut-namespace:method var="result" name1="value1" name2="value2">
         namespace.method({name1:'value1', name2:'value2'}) returned result ${result}
-    </ut-namespace:method
-
+    </ut-namespace:method>
     ```
+
+    
