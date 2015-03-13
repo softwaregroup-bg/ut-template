@@ -1,12 +1,16 @@
 'use strict';
-var Tag = require('marko/compiler/taglibs/Taglib').Tag;
-var Att = require('marko/compiler/taglibs/Taglib').Attribute;
+var util = require('util');
+var Taglib = require('marko/compiler/taglibs/Taglib');
+var Tag = Taglib.Tag;
+var Att = Taglib.Attribute;
 var renderer  = require.resolve('./renderer');
 
 function UTLib(methods){
     this.tags = {};
     methods && methods.forEach(this.addMethod.bind(this));
 }
+
+util.inherits(UTLib, Taglib);
 
 UTLib.prototype.id = 'ut';
 
@@ -35,9 +39,12 @@ module.exports = function transform(node, compiler, template) {
             compiler.options.preserveWhitespace = true;
         }
     } else if (node.namespace && node.namespace.startsWith('ut-')){
+        var tag = node.namespace.split('-')[1] + ':' + node._localName;
         if (!taglib){
-            taglib = new UTLib(['security:login','namespace:method']);
+            taglib = new UTLib([tag]);
             compiler.taglibs.addTaglib(taglib);
+        } else if(!taglib.tags['ut-' + tag]) {
+            taglib.addMethod(tag);
         }
 
         if (!node.getProperty('$$opcode')) {
@@ -61,20 +68,21 @@ module.exports = function transform(node, compiler, template) {
         if ($$.length) {
             node.setProperty('$$', template.makeExpression('{' + $$.join(', ') + '}'));
         }
-
-        if (!template.hasVar('escapeXml')) {
-            if (template.path.endsWith('.sql.marko')) {
-                template.addVar('escapeXml', 'out.global.escapeSQL');
-            } else
-            if (template.path.endsWith('.json.marko')) {
-                template.addVar('escapeXml', 'out.global.escapeJSON');
-            } else
-            if (template.path.endsWith('.csv.marko')) {
-                template.addVar('escapeXml', 'out.global.escapeCSV');
-            };
-        }
-        if (!template.hasVar('params')) {
-            template.addVar('params', 'data.params');
-        }
     }
+
+    if (!template.hasVar('escapeXml')) {
+        if (template.path.endsWith('.sql.marko')) {
+            template.addVar('escapeXml', 'out.global.escapeSQL');
+        } else
+        if (template.path.endsWith('.json.marko')) {
+            template.addVar('escapeXml', 'out.global.escapeJSON');
+        } else
+        if (template.path.endsWith('.csv.marko')) {
+            template.addVar('escapeXml', 'out.global.escapeCSV');
+        };
+    }
+    if (!template.hasVar('params')) {
+        template.addVar('params', 'data.params');
+    }
+
 }

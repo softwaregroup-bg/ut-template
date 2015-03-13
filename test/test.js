@@ -1,6 +1,7 @@
 var fs = require('fs');
 if (fs.existsSync('./test.xml.marko.js')) fs.unlinkSync('./test.xml.marko.js');
 if (fs.existsSync('./test.sql.marko.js')) fs.unlinkSync('./test.sql.marko.js');
+if (fs.existsSync('./test.json.marko.js')) fs.unlinkSync('./test.json.marko.js');
 
 var t = require('ut-template');
 t.init({
