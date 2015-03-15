@@ -4,5 +4,13 @@
   "dependencies": {
     "view-engine": "~1.1.0",
     "ut-bus": "~5.0.0"
+  },
+  "publishConfig": {
+    "registry": "http://npm.softwaregroup-bg.com"
+  },
+  "description": "UT template module",
+  "repository": {
+    "type": "git",
+    "url": "git@git.softwaregroup-bg.com:ut5/ut-template.git"
   }
 }
