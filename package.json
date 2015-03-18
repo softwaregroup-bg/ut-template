@@ -2,8 +2,13 @@
   "name": "ut-template",
   "version": "5.0.0",
   "dependencies": {
-    "view-engine": "~1.1.0",
-    "ut-bus": "~5.0.0"
+    "marko": "~2.0.10",
+    "ut-bus": "~5.0.0",
+    "view-engine": "~1.1.0"
+  },
+  "devDependencies":{
+    "falafel": "~1.0.1",
+    "optimizer-marko": "~2.0.0"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
