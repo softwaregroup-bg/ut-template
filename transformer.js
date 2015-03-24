@@ -6,17 +6,15 @@ var Att = Taglib.Attribute;
 var renderer  = require.resolve('./renderer');
 
 function UTLib(methods){
-    this.tags = {};
+    Taglib.call(this, 'ut');
     methods && methods.forEach(this.addMethod.bind(this));
 }
 
 util.inherits(UTLib, Taglib);
 
-UTLib.prototype.id = 'ut';
-
 UTLib.prototype.addMethod = function (name){
-    var t=new Tag();
-    t.name = 'ut-'+name;
+    var t=new Tag(this);
+    t.name = name;
     t.renderer = renderer;
     t.nestedVariables={
         vars:[{nameFromAttribute:'var'}],
@@ -28,7 +26,7 @@ UTLib.prototype.addMethod = function (name){
     a=new Att('var');
     a.type = 'identifier';
     t.addAttribute(a);
-    this.tags[t.name]=t;
+    this.addTag(t);
 }
 
 var taglib;
@@ -39,12 +37,13 @@ module.exports = function transform(node, compiler, template) {
             compiler.options.preserveWhitespace = true;
         }
     } else if (node.namespace && node.namespace.startsWith('ut-')){
-        var tag = node.namespace.split('-')[1] + ':' + node._localName;
+        var tagName = node.namespace + ':' + node._localName;
         if (!taglib){
-            taglib = new UTLib([tag]);
+            taglib = new UTLib([tagName]);
             compiler.taglibs.addTaglib(taglib);
-        } else if(!taglib.tags['ut-' + tag]) {
-            taglib.addMethod(tag);
+        } else if(!taglib.tags[tagName]) {
+            taglib.addMethod(tagName);
+            compiler.taglibs.merged.tags[tagName] = taglib.tags[tagName];
         }
 
         if (!node.getProperty('$$opcode')) {
