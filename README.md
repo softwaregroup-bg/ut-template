@@ -48,7 +48,7 @@ Here are the enhancements to the Marko engine
 
 ## Examples and replacements
 
-### Correct way of using switch (prev known as sg:switch)
+#### Correct way of using switch (prev known as sg:switch)
 
 ```xml
 <with vars="name = ${s.method};">
@@ -61,7 +61,8 @@ Here are the enhancements to the Marko engine
 </with>
 ```
 
-### Correct way of using sql template (prev known as sg:sql)
+#### Correct way of using sql template (prev known as sg:sql)
+no more sg:sql tag, every call to db will be handled by sql port and db will be queried trough it whit help of special constructed message
 
 ```xml
 <ut-db:getproducts var="products">
