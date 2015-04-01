@@ -62,12 +62,13 @@ Here are the enhancements to the Marko engine
 ```
 
 #### Correct way of using sql template (prev known as sg:sql)
-no more sg:sql tag, every call to db will be handled by sql port and db will be queried trough it whit help of special constructed message
+no more sg:sql tag, every call to db will be handled by [ut-port-sql](//git.softwaregroup-bg.com/ut5/ut-port-sql/tree/master#sql-port-ut-port-sql) and db will be queried trough it whit help of special constructed message
 
 ```xml
 <ut-db:getproducts var="products">
     ${products}
 </ut-db:getproducts>
 ```
- where `db` is db named namespace, `getproducts` is the operation code / method and `products` is the streamed response
+ where `db` is db named namespace(wchi is actually a message destination field), `getproducts` is the operation code / method and `products` is the streamed response
+ 
  @todo - link to "what is namespace and opcode/method" documentation
