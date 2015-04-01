@@ -62,7 +62,7 @@ Here are the enhancements to the Marko engine
 ```
 
 #### Correct way of using sql template (prev known as sg:sql)
-no more sg:sql tag, every call to db will be handled by [ut-port-sql](//git.softwaregroup-bg.com/ut5/ut-port-sql/tree/master#sql-port-ut-port-sql) and db will be queried trough it whit help of special constructed message
+no more sg:sql tag, every call to db will be handled by [ut-port-sql](https://git.softwaregroup-bg.com/ut5/ut-port-sql/tree/master#sql-port-ut-port-sql) and db will be queried trough it whit help of special constructed message
 
 ```xml
 <ut-db:getproducts var="products">
