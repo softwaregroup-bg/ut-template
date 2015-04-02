@@ -46,4 +46,29 @@ Here are the enhancements to the Marko engine
     </ut-namespace:method>
     ```
 
-    
+## Examples and replacements
+
+#### Correct way of using switch (prev known as sg:switch)
+
+```xml
+<with vars="name = ${s.method};">
+    <if test="name === 'add-sms'">
+        <include template="include some template"/>
+    </if>
+    <if test="name === 'closeaccount'">
+        <include template="include some template"/>
+    </if>
+</with>
+```
+
+#### Correct way of using sql template (prev known as sg:sql)
+no more sg:sql tag, every call to db will be handled by [ut-port-sql](https://git.softwaregroup-bg.com/ut5/ut-port-sql/tree/master#sql-port-ut-port-sql) and db will be queried trough it whit help of special constructed message
+
+```xml
+<ut-db:getproducts var="products">
+    ${products}
+</ut-db:getproducts>
+```
+ where `db` is db named namespace(wchi is actually a message destination field), `getproducts` is the operation code / method and `products` is the streamed response
+ 
+ @todo - link to "what is namespace and opcode/method" documentation
