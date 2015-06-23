@@ -31,10 +31,27 @@ UTLib.prototype.addMethod = function (name){
 
 var taglib;
 
+var t = {
+    pattern :  /\$\[([^\]]+)\]/gi,
+    replacement : '\${t(\'$1\')}',
+    preProcess: function(template) {
+        function preProcess(node){
+            node.forEachChild(function(node) {
+                if (node.nodeType === 'text') {
+                    node.text = node.text.replace(t.pattern, t.replacement);
+                } else {
+                    preProcess(node); // do recursively for all non-text children
+                }
+            });
+        }
+        preProcess(template.rootNode);
+    }
+};
+
 module.exports = function transform(node, compiler, template) {
     var templateType = template.path.split('.').slice(-2)[0];
-    if (node.localName == 'c-template'){
-        switch(templateType) {
+    if (node.localName == 'c-template') {
+        switch (templateType) {
             case 'sql':
                 node.escapeXmlBodyText = false;
             case 'json':
@@ -75,7 +92,6 @@ module.exports = function transform(node, compiler, template) {
             node.setProperty('$$', template.makeExpression('{' + $$.join(', ') + '}'));
         }
     }
-
     if (!template.hasVar('escapeXml')) {
         switch (templateType) {
             case 'sql':
@@ -93,5 +109,9 @@ module.exports = function transform(node, compiler, template) {
     }
     if (!template.hasVar('params')) {
         template.addVar('params', 'data.params');
+    }
+    if (!template.hasVar('t')) {
+        template.addVar('t', 'data.t');
+        t.preProcess(template);
     }
 }
