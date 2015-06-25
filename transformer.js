@@ -33,12 +33,15 @@ var taglib;
 
 var t = {
     pattern :  /\$\[([^\]]+)\]/gi,
-    replacement : '\${t(\'$1\')}',
+    escape: /\\'/g,
+    replace: function(match, label){
+        return '${t(\'' + label.replace(t.escape, '\\$&') + '\')}';
+    },
     preProcess: function(template) {
         function preProcess(node){
             node.forEachChild(function(node) {
-                if (node.nodeType === 'text') {
-                    node.text = node.text.replace(t.pattern, t.replacement);
+                if (node.nodeType === 'text' && node.text.indexOf('$[') !== -1){
+                    node.text = node.text.replace(t.pattern, t.replace);
                 } else {
                     preProcess(node); // do recursively for all non-text children
                 }
@@ -69,7 +72,6 @@ module.exports = function transform(node, compiler, template) {
             taglib.addMethod(tagName);
             compiler.taglibs.merged.tags[tagName] = taglib.tags[tagName];
         }
-
         if (!node.getProperty('$$opcode')) {
             node.setProperty('$$opcode', '\'' + node.namespace.substr(3) + '.' + node._localName + '\'');
         }
