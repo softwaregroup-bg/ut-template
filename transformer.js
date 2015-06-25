@@ -33,7 +33,7 @@ var taglib;
 
 var t = {
     pattern :  /\$\[([^\]]+)\]/gi,
-    escape: /\\'/g,
+    escape: /['\\]/g,
     replace: function(match, label){
         return '${t(\'' + label.replace(t.escape, '\\$&') + '\')}';
     },
