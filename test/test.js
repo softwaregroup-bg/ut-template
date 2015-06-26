@@ -31,6 +31,9 @@ t.init({
                 return {result: 'method result'};
             }
         }[name];
+    },
+    config: {
+        'translations' : 'translations.json'
     }
 })
 
@@ -64,7 +67,7 @@ unesc.render({username:'admin'}).then(function(res){
     console.log('\n\n--------------\nUNESCAPE SQL error=',err);
 })
 
-tt.render().then(function(res){
+tt.render({}).then(function(res){
     console.log('\n\n--------------\nTRANSLATED TEMPLATE=',res);
 }).catch(function(err){
     console.log('\n\n--------------\nnTRANSLATED TEMPLATE error=',err);
