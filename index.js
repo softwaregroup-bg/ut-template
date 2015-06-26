@@ -1,5 +1,7 @@
 var when = require('when')
 var viewEngine = require('view-engine');
+var Path = require('path');
+var _undefined;
 viewEngine.register('marko', require('./view-engine-marko'));
 
 var bus;
@@ -24,22 +26,33 @@ function escapeJSON(s) {
     }
 }
 
-function translate(label) {
-    return 'dummy translation';
+var translations;
+function translate(label, lang) {
+    var langObject = translations[lang] || {};
+    var translation = langObject[label] || label;
+    langObject = _undefined; // releasing memory just in case won't harm. langObject could be big.
+    return translation;
 }
 
 module.exports = {
     init: function(b) {
         bus = b;
+        try {
+            translations = require(Path.resolve(b.config.translations));
+        } catch (e) {
+            translations = {};
+        }
     },
     load: function(template) {
-        var t = viewEngine.load(template);
+        var tmpl = viewEngine.load(template);
         return {
             render: function(data) {
                 return when.promise(function(resolve, reject) {
-                    t.render({
+                    tmpl.render({
                         params:data,
-                        t: translate,
+                        t: function(label){
+                            return translate(label, (data.$$ && data.$$.lang) || 'en');
+                        },
                         $global:{
                             bus:bus,
                             escapeSQL:escapeSQL,
