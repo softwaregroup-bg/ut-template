@@ -69,6 +69,49 @@ no more sg:sql tag, every call to db will be handled by [ut-port-sql](https://gi
     ${products}
 </ut-db:getproducts>
 ```
- where `db` is db named namespace(wchi is actually a message destination field), `getproducts` is the operation code / method and `products` is the streamed response
+
+where `db` is db named namespace(wchi is actually a message destination field), `getproducts` is the operation code / method and `products` is the streamed response
  
+#### Internationalization
+Internationalization within the ut-template engine could be achieved in 2 ways:
+
+ 1. by surrounding the label in square brackets:
+ **``` $[label] ```**
+ 2. by calling a function 't' which is available within the scope of every template by default:
+**``` ${t('label')}```**
+
+The translations themselves must be provided by the implementation that is currently running. Within the impl folder there should be a json file with all the translations for the implementation.
+The files format should be as follows:
+
+```js
+{
+    "en" : {
+        "label1" : "label1 translation in English",
+        "label2" : "label2 translation in English",
+        ...
+    },
+    "fr" : {
+        "label1" : "label1 translation in French",
+        "label2" : "label2 translation in French",
+        ...
+    },
+    ...
+}
+```
+
+the json file with all the translation should be specified in implementation's config.json as follows:
+
+```js
+{
+    ...
+    "translations": "translations.json"
+}
+```
+
+The file path specified should be absolute but relative to implementation's root directory. E.g. for the case above the file should be located in the root directory. If it was for example "translations/collection.json" then the file should be called collection.json and should be located inside a 'translations' folder within the root directory.
+
+
+----------
+
+
  @todo - link to "what is namespace and opcode/method" documentation
