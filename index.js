@@ -46,12 +46,15 @@ module.exports = {
     load: function(template) {
         var tmpl = viewEngine.load(template);
         return {
-            render: function(data) {
+            render: function(data, language) {
+                if (!data) {
+                    data = {};
+                }
                 return when.promise(function(resolve, reject) {
                     tmpl.render({
                         params:data,
-                        t: function(label){
-                            return translate(label, (data.$$ && data.$$.lang) || 'en');
+                        t: function(label) {
+                            return translate(label, language || data.language || 'en');
                         },
                         $global:{
                             bus:bus,
