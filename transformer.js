@@ -5,25 +5,25 @@ var Tag = Taglib.Tag;
 var Att = Taglib.Attribute;
 var renderer  = require.resolve('./renderer');
 
-function UTLib(methods){
+function UTLib(methods) {
     Taglib.call(this, 'ut');
     methods && methods.forEach(this.addMethod.bind(this));
 }
 
 util.inherits(UTLib, Taglib);
 
-UTLib.prototype.addMethod = function (name){
-    var t=new Tag(this);
+UTLib.prototype.addMethod = function(name) {
+    var t = new Tag(this);
     t.name = name;
     t.renderer = renderer;
-    t.nestedVariables={
+    t.nestedVariables = {
         vars:[{nameFromAttribute:'var'}],
     };
-    var a=new Att('*');
+    var a = new Att('*');
     t.addAttribute(a);
     a.dynamicAttribute = false;
     delete a.targetProperty;
-    a=new Att('var');
+    a = new Att('var');
     a.type = 'identifier';
     t.addAttribute(a);
     this.addTag(t);
@@ -34,14 +34,16 @@ var taglib;
 var t = {
     pattern :  /\$\[([^\]]+)\]/gi,
     escape: /['\\]/g,
-    replace: function(match, label){
+    replace: function(match, label) {
         return '${t(\'' + label.replace(t.escape, '\\$&') + '\')}';
     },
     preProcess: function(template) {
-        function preProcess(node){
+        function preProcess(node) {
             node.forEachChild(function(node) {
-                if (node.nodeType === 'text' && node.text.indexOf('$[') !== -1){
-                    node.text = node.text.replace(t.pattern, t.replace);
+                if (node.nodeType === 'text') {
+                    if (node.text.indexOf('$[') !== -1) {
+                        node.text = node.text.replace(t.pattern, t.replace);
+                    }
                 } else {
                     preProcess(node); // do recursively for all non-text children
                 }
@@ -63,12 +65,12 @@ module.exports = function transform(node, compiler, template) {
             default:
                 break;
         }
-    } else if (node.namespace && node.namespace.startsWith('ut-')){
+    } else if (node.namespace && node.namespace.startsWith('ut-')) {
         var tagName = node.namespace + ':' + node._localName;
-        if (!taglib){
+        if (!taglib) {
             taglib = new UTLib([tagName]);
             compiler.taglibs.addTaglib(taglib);
-        } else if(!taglib.tags[tagName]) {
+        } else if (!taglib.tags[tagName]) {
             taglib.addMethod(tagName);
             compiler.taglibs.merged.tags[tagName] = taglib.tags[tagName];
         }
@@ -76,17 +78,17 @@ module.exports = function transform(node, compiler, template) {
             node.setProperty('$$opcode', '\'' + node.namespace.substr(3) + '.' + node._localName + '\'');
         }
 
-        var $$=[];
+        var $$ = [];
         var propsToRemove = [];
 
-        node.forEachProperty(function (name, value) {
+        node.forEachProperty(function(name, value) {
             if (name.startsWith('$$')) {
                 $$.push(JSON.stringify(name.substring('$$'.length)) + ': ' + value);
                 propsToRemove.push(name);
             }
         });
 
-        propsToRemove.forEach(function (propName) {
+        propsToRemove.forEach(function(propName) {
             node.removeProperty(propName);
         });
 
