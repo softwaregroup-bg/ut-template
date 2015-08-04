@@ -1,4 +1,4 @@
-var when = require('when')
+var when = require('when');
 var viewEngine = require('view-engine');
 var Path = require('path');
 var _undefined;
