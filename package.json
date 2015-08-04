@@ -4,7 +4,8 @@
   "dependencies": {
     "marko": "~2.0.10",
     "ut-bus": "~5.0.0",
-    "view-engine": "~1.1.0"
+    "view-engine": "~1.1.0",
+    "when": "~3.7.2"
   },
   "devDependencies":{
     "falafel": "~1.0.1",
