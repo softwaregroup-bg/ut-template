@@ -8,6 +8,7 @@ if (fs.existsSync('./t.marko.js')) fs.unlinkSync('./t.marko.js');
 if (fs.existsSync('./includes/t.marko.js')) fs.unlinkSync('./includes/t.marko.js');
 
 var t = require('ut-template');
+
 t.init({
     importMethod:function(name){
         return {
@@ -33,7 +34,7 @@ t.init({
         }[name];
     },
     config: {
-        'translations' : 'translations.json'
+        'translations' : require.resolve('./translations.json')
     }
 })
 
