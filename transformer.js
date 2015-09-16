@@ -62,8 +62,10 @@ module.exports = function transform(node, compiler, template) {
             case 'json':
             case 'csv':
                 compiler.options.preserveWhitespace = true;
-            default:
-                break;
+            break;
+            case 'ussd':
+                compiler.options.preserveWhitespace = false;
+            break;
         }
     } else if (node.namespace && node.namespace.startsWith('ut-')) {
         var tagName = node.namespace + ':' + node._localName;
