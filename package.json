@@ -1,8 +1,8 @@
 {
   "name": "ut-template",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "dependencies": {
-    "marko": "~2.0.10",
+    "marko": "^2.7.25",
     "view-engine": "~1.1.0",
     "when": "~3.7.2"
   },
