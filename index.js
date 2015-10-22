@@ -3,6 +3,8 @@ var viewEngine = require('view-engine');
 var Path = require('path');
 var _undefined;
 viewEngine.register('marko', require('./view-engine-marko'));
+var markoCompiler = require('marko/compiler');
+var marko = require('marko');
 
 var bus;
 
@@ -45,6 +47,8 @@ module.exports = {
     },
     load: function(template) {
         var tmpl = viewEngine.load(template);
+        console.log('template:');
+        console.log(tmpl);
         return {
             render: function(data, language) {
                 if (!data) {
@@ -72,5 +76,139 @@ module.exports = {
                 })
             }
         }
-    }
+
+    },
+    compile: function(templateContent, data, engine) {
+        if (!templateContent) {
+            templateContent = '';
+        }
+        if (engine === 'marko') {
+            return markoCompiler.compile(templateContent, require.resolve('./'), function (err, compiledTemplate) {
+                if (err) {
+                    return rej(err);
+                }
+                var tmpl = marko.load(require.resolve('./'), compiledTemplate);
+                return {
+                    render: function (data, language) {
+                        if (!data) {
+                            data = {};
+                        }
+                        return when.promise(function (resolve, reject) {
+                            tmpl.render({
+                                params: data,
+                                t: function (label) {
+                                    return translate(label, language || data.language || 'en');
+                                },
+                                $global: {
+                                    bus: bus,
+                                    escapeSQL: escapeSQL,
+                                    escapeCSV: escapeCSV,
+                                    escapeJSON: escapeJSON
+                                }
+                            }, function (err, res) {
+                                if (err) {
+                                    reject(err)
+                                } else {
+                                    resolve(res);
+                                }
+                            });
+                        })
+                    }
+                }
+            });
+        }
+
+    },
+    compileOld: function(templateContent, templatePath, engine) {
+        if (!templateContent) {
+            templateContent = '';
+        }
+        if (!templatePath) {
+            templatePath = './';
+        }
+        if (engine === 'marko') {
+            return when.promise(function(res, rej) {
+                markoCompiler.compile(templateContent, templatePath, function (err, compiledTemplate) {
+                    if (err) {
+                        return rej(err);
+                    }
+                    console.log('compiledTemplate:');
+                    console.log(compiledTemplate);
+                    console.log('compiledTemplate type:');
+                    console.log(typeof compiledTemplate);
+                    var exec = new Function( compiledTemplate );
+                    marko.
+                    console.log('exports:');
+                    console.log(exports);
+                    console.log('exports.create:');
+                    console.log(exports.create);
+                    var tmpl = exports.create;
+
+                    res( {
+                        render: function (data, language) {
+                            if (!data) {
+                                data = {};
+                            }
+                            return when.promise(function (resolve, reject) {
+                                tmpl.render({
+                                    params: data,
+                                    t: function (label) {
+                                        return translate(label, language || data.language || 'en');
+                                    },
+                                    $global: {
+                                        bus: bus,
+                                        escapeSQL: escapeSQL,
+                                        escapeCSV: escapeCSV,
+                                        escapeJSON: escapeJSON
+                                    }
+                                }, function (err, res) {
+                                    if (err) {
+                                        reject(err)
+                                    } else {
+                                        resolve(res);
+                                    }
+                                });
+                            });
+                        }
+                    });
+                });
+            });
+        } else {
+            return {};
+        }
+    },
+    compileNew: function(templateContent, data, engine) {
+        var tmpl = viewEngine.load(template);
+        console.log('template:');
+        console.log(tmpl);
+        var tmpl = require('marko').load(require.resolve('./'),compiledTemplate);
+        return {
+            render: function(data, language) {
+                if (!data) {
+                    data = {};
+                }
+                return when.promise(function(resolve, reject) {
+                    tmpl.render({
+                        params:data,
+                        t: function(label) {
+                            return translate(label, language || data.language || 'en');
+                        },
+                        $global:{
+                            bus:bus,
+                            escapeSQL:escapeSQL,
+                            escapeCSV:escapeCSV,
+                            escapeJSON:escapeJSON
+                        }
+                    }, function(err, res) {
+                        if (err) {
+                            reject(err)
+                        } else {
+                            resolve(res);
+                        }
+                    });
+                })
+            }
+        }
+
+    },
 }

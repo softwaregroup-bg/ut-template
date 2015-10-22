@@ -43,6 +43,10 @@ var json = t.load(require.resolve('./test.json.marko'));
 var unesc = t.load(require.resolve('./unesc.sql.marko'));
 var tt = t.load(require.resolve('./t.marko'));
 
+
+console.log('pre-compiled xml');
+console.log(require.resolve('./test.xml.marko'));
+
 xml.render({username:'admin'}).then(function(res){
     console.log('\n\n--------------\nXML=',res);
 }).catch(function(err){
@@ -72,3 +76,35 @@ tt.render({}).then(function(res){
 }).catch(function(err){
     console.log('\n\n--------------\nnTRANSLATED TEMPLATE error=',err);
 })
+
+t.compile('<sg:container>     000     <ut-security:login var="l" userName="${params.username}">aaa         ' +
+    '<ut-namespace:method var="y" x="${l.result}">bbb                 ${l.result} ccc                 ' +
+    '<someTab q="v">test</someTab>                 ${y.result}         </ut-namespace:method>     </ut-security:login>     ddd </sg:container>',
+    {username:'admin'},'marko').then(function(res){
+    console.log('\n\n--------------\nnDYNAMIC XML=',res);
+}).catch(function(err){
+    console.log('\n\n--------------\nnDYNAMIC XML error=',err);
+})
+
+/*
+var compiled = t.compile('<sg:container>     000     <ut-security:login var="l" userName="${params.username}">aaa         ' +
+    '<ut-namespace:method var="y" x="${l.result}">bbb                 ${l.result} ccc                 ' +
+    '<someTab q="v">test</someTab>                 ${y.result}         </ut-namespace:method>     </ut-security:login>     ddd </sg:container>',
+    './','marko' );
+console.log('compiled');
+console.log(compiled);
+compiled
+    .then(function(template){
+        console.log('compiled template');
+        console.log(template);
+    template.render({username:'Hadmin'}).then(function(res){
+        console.log('\n\n--------------\nDYNAMIC XML=',res);
+    }).catch(function(err){
+        console.log('\n\n--------------\nDYNAMIC XML error=',err);
+    });
+}).catch(function(e){
+        "use strict";
+
+    });
+
+    */
