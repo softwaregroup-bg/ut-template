@@ -7,8 +7,6 @@
     "when": "~3.7.2"
   },
   "devDependencies":{
-    "falafel": "~1.0.1",
-    "optimizer-marko": "~2.0.0"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
