@@ -5,7 +5,7 @@ var _undefined;
 viewEngine.register('marko', require('./view-engine-marko'));
 var markoCompiler = require('marko/compiler');
 var marko = require('marko');
-
+var fs = require('fs');
 var bus;
 
 function escapeSQL(s) {
@@ -47,8 +47,6 @@ module.exports = {
     },
     load: function(template) {
         var tmpl = viewEngine.load(template);
-        console.log('template:');
-        console.log(tmpl);
         return {
             render: function(data, language) {
                 if (!data) {
@@ -78,137 +76,72 @@ module.exports = {
         }
 
     },
-    compile: function(templateContent, data, engine) {
+    compileMarko: function(templateContent, fileName, path) {
         if (!templateContent) {
             templateContent = '';
         }
-        if (engine === 'marko') {
-            return markoCompiler.compile(templateContent, require.resolve('./'), function (err, compiledTemplate) {
+        if(!path) {
+            path = '';
+        }
+        if(!fileName) {
+            return when.reject(new Error('not pass fileName'));
+        }
+        return when.promise(function (resolve, reject) {
+            var html = markoCompiler.compile(templateContent, require.resolve('./'), function (err, compiledTemplate) {
                 if (err) {
-                    return rej(err);
+                    reject(err);
                 }
-                var tmpl = marko.load(require.resolve('./'), compiledTemplate);
-                return {
-                    render: function (data, language) {
-                        if (!data) {
-                            data = {};
+                var template;
+                try {
+                    template = require(Path.resolve('./'+path+'/'+fileName+'.marko'));
+                    if(compiledTemplate.indexOf(template._.toString()) === -1) {
+                        throw 'There is a difference between mako templates';
+                    }
+                    resolve({
+                        render: function(data, language){
+                            return render(template, data, language);
                         }
-                        return when.promise(function (resolve, reject) {
-                            tmpl.render({
-                                params: data,
-                                t: function (label) {
-                                    return translate(label, language || data.language || 'en');
-                                },
-                                $global: {
-                                    bus: bus,
-                                    escapeSQL: escapeSQL,
-                                    escapeCSV: escapeCSV,
-                                    escapeJSON: escapeJSON
-                                }
-                            }, function (err, res) {
-                                if (err) {
-                                    reject(err)
-                                } else {
-                                    resolve(res);
-                                }
-                            });
-                        })
-                    }
-                }
-            });
-        }
-
-    },
-    compileOld: function(templateContent, templatePath, engine) {
-        if (!templateContent) {
-            templateContent = '';
-        }
-        if (!templatePath) {
-            templatePath = './';
-        }
-        if (engine === 'marko') {
-            return when.promise(function(res, rej) {
-                markoCompiler.compile(templateContent, templatePath, function (err, compiledTemplate) {
-                    if (err) {
-                        return rej(err);
-                    }
-                    console.log('compiledTemplate:');
-                    console.log(compiledTemplate);
-                    console.log('compiledTemplate type:');
-                    console.log(typeof compiledTemplate);
-                    var exec = new Function( compiledTemplate );
-                    marko.
-                    console.log('exports:');
-                    console.log(exports);
-                    console.log('exports.create:');
-                    console.log(exports.create);
-                    var tmpl = exports.create;
-
-                    res( {
-                        render: function (data, language) {
-                            if (!data) {
-                                data = {};
+                    })
+                } catch(e) {
+                    fs.writeFile(path+'/'+fileName+'.marko.js', compiledTemplate, function(err) {
+                        if(err) {
+                            reject(err);
+                        }
+                        template = require(Path.resolve('./'+path+'/'+fileName+'.marko'));
+                        resolve({
+                            render : function(data, language){
+                                return render(template, data, language);
                             }
-                            return when.promise(function (resolve, reject) {
-                                tmpl.render({
-                                    params: data,
-                                    t: function (label) {
-                                        return translate(label, language || data.language || 'en');
-                                    },
-                                    $global: {
-                                        bus: bus,
-                                        escapeSQL: escapeSQL,
-                                        escapeCSV: escapeCSV,
-                                        escapeJSON: escapeJSON
-                                    }
-                                }, function (err, res) {
-                                    if (err) {
-                                        reject(err)
-                                    } else {
-                                        resolve(res);
-                                    }
-                                });
-                            });
-                        }
+                        });
                     });
-                });
-            });
-        } else {
-            return {};
-        }
-    },
-    compileNew: function(templateContent, data, engine) {
-        var tmpl = viewEngine.load(template);
-        console.log('template:');
-        console.log(tmpl);
-        var tmpl = require('marko').load(require.resolve('./'),compiledTemplate);
-        return {
-            render: function(data, language) {
-                if (!data) {
-                    data = {};
                 }
-                return when.promise(function(resolve, reject) {
-                    tmpl.render({
-                        params:data,
-                        t: function(label) {
-                            return translate(label, language || data.language || 'en');
-                        },
-                        $global:{
-                            bus:bus,
-                            escapeSQL:escapeSQL,
-                            escapeCSV:escapeCSV,
-                            escapeJSON:escapeJSON
-                        }
-                    }, function(err, res) {
-                        if (err) {
-                            reject(err)
-                        } else {
-                            resolve(res);
-                        }
-                    });
-                })
-            }
-        }
-
+            });
+        });
     },
+}
+
+function render (tmpl, data, language) {
+    if (!data) {
+        data = {};
+    }
+    return when.promise(function (resolve, reject) {
+        tmpl.render({
+            params: data,
+            t: function (label) {
+                return translate(label, language || data.language || 'en');
+            },
+            $global: {
+                bus: bus,
+                escapeSQL: escapeSQL,
+                escapeCSV: escapeCSV,
+                escapeJSON: escapeJSON
+            }
+        }, function (err, res) {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(res);
+            }
+        });
+    })
 }
