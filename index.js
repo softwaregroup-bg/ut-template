@@ -6,6 +6,8 @@ viewEngine.register('marko', require('./view-engine-marko'));
 var markoCompiler = require('marko/compiler');
 var marko = require('marko');
 var fs = require('fs');
+var requireReload = require('require-reload')(require);
+
 var bus;
 
 function escapeSQL(s) {
@@ -52,29 +54,9 @@ module.exports = {
                 if (!data) {
                     data = {};
                 }
-                return when.promise(function(resolve, reject) {
-                    tmpl.render({
-                        params:data,
-                        t: function(label) {
-                            return translate(label, language || data.language || 'en');
-                        },
-                        $global:{
-                            bus:bus,
-                            escapeSQL:escapeSQL,
-                            escapeCSV:escapeCSV,
-                            escapeJSON:escapeJSON
-                        }
-                    }, function(err, res) {
-                        if (err) {
-                            reject(err)
-                        } else {
-                            resolve(res);
-                        }
-                    });
-                })
+                return render(tmpl, data, language);
             }
         }
-
     },
     compileMarko: function(templateContent, fileName, path) {
         if (!templateContent) {
@@ -95,7 +77,8 @@ module.exports = {
                 try {
                     template = require(Path.resolve('./'+path+'/'+fileName+'.marko'));
                     if(compiledTemplate.indexOf(template._.toString()) === -1) {
-                        throw 'There is a difference between mako templates';
+                        console.log('There are a difference between marko templates');
+                        throw 'There are a difference between marko templates';
                     }
                     resolve({
                         render: function(data, language){
@@ -107,7 +90,7 @@ module.exports = {
                         if(err) {
                             reject(err);
                         }
-                        template = require(Path.resolve('./'+path+'/'+fileName+'.marko'));
+                        template = requireReload(Path.resolve('./'+path+'/'+fileName+'.marko'));
                         resolve({
                             render : function(data, language){
                                 return render(template, data, language);
