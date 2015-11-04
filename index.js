@@ -59,6 +59,9 @@ module.exports = {
         }
     },
     compileMarko: function(templateContent, fileName, path) {
+        var templateContent = msg.templateContent;
+        var fileName = msg.fileName;
+        var path = msg.path;
         if (!templateContent) {
             templateContent = '';
         }
