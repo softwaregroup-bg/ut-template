@@ -58,27 +58,24 @@ module.exports = {
             }
         }
     },
-    compileMarko: function(templateContent, fileName, path) {
-        var templateContent = msg.templateContent;
-        var fileName = msg.fileName;
-        var path = msg.path;
-        if (!templateContent) {
-            templateContent = '';
+    compileMarko: function(msg) {
+        if (!msg.templateContent) {
+            msg.templateContent = '';
         }
-        if(!path) {
-            path = '';
+        if(!msg.path) {
+            msg.path = '';
         }
-        if(!fileName) {
+        if(!msg.fileName) {
             return when.reject(new Error('not pass fileName'));
         }
         return when.promise(function (resolve, reject) {
-            var html = markoCompiler.compile(templateContent, require.resolve('./'), function (err, compiledTemplate) {
+            var html = markoCompiler.compile(msg.templateContent, require.resolve('./'), function (err, compiledTemplate) {
                 if (err) {
                     reject(err);
                 }
                 var template;
                 try {
-                    template = require(Path.resolve('./'+path+'/'+fileName+'.marko'));
+                    template = require(Path.resolve('./'+msg.path+'/'+msg.fileName+'.marko'));
                     if(compiledTemplate.indexOf(template._.toString()) === -1) {
                         console.log('There are a difference between marko templates');
                         throw 'There are a difference between marko templates';
@@ -89,11 +86,11 @@ module.exports = {
                         }
                     })
                 } catch(e) {
-                    fs.writeFile(path+'/'+fileName+'.marko.js', compiledTemplate, function(err) {
+                    fs.writeFile(msg.path+'/'+msg.fileName+'.marko.js', compiledTemplate, function(err) {
                         if(err) {
                             reject(err);
                         }
-                        template = requireReload(Path.resolve('./'+path+'/'+fileName+'.marko'));
+                        template = requireReload(Path.resolve('./'+msg.path+'/'+msg.fileName+'.marko'));
                         resolve({
                             render : function(data, language){
                                 return render(template, data, language);
