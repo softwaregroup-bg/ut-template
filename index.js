@@ -10,7 +10,7 @@ function escapeSQL(s) {
     if (s == null) {
         return 'null';
     } else {
-        return 'N\'' + s.toString().replace(/'/g, '\'') + '\'';
+        return 'N\'' + s.toString().replace(/'/g, '\'\'') + '\'';
     }
 }
 
