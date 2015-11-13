@@ -37,19 +37,19 @@ var t = {
     replace: function(match, label) {
         return '${t(\'' + label.replace(t.escape, '\\$&') + '\')}';
     },
-    preProcess: function(template) {
-        function preProcess(node) {
-            node.forEachChild(function(node) {
-                if (node.nodeType === 'text') {
-                    if (node.text.indexOf('$[') !== -1) {
-                        node.text = node.text.replace(t.pattern, t.replace);
-                    }
-                } else {
-                    preProcess(node); // do recursively for all non-text children
+    preProcessNode: function(node) {
+        node.forEachChild(function(node) {
+            if (node.nodeType === 'text') {
+                if (node.text.indexOf('$[') !== -1) {
+                    node.text = node.text.replace(t.pattern, t.replace);
                 }
-            });
-        }
-        preProcess(template.rootNode);
+            } else {
+                t.preProcessNode(node); // do recursively for all non-text children
+            }
+        });
+    },
+    preProcessTemplate: function(template) {
+        t.preProcessNode(template.rootNode);
     }
 };
 
@@ -118,6 +118,6 @@ module.exports = function transform(node, compiler, template) {
     }
     if (!template.hasVar('t')) {
         template.addVar('t', 'data.t');
-        t.preProcess(template);
+        t.preProcessTemplate(template);
     }
 }
