@@ -3,7 +3,7 @@ var util = require('util');
 var Taglib = require('marko/compiler/taglibs/Taglib');
 var Tag = Taglib.Tag;
 var Att = Taglib.Attribute;
-var renderer  = require.resolve('./renderer');
+var renderer = require.resolve('./renderer');
 
 function UTLib(methods) {
     Taglib.call(this, 'ut');
@@ -17,7 +17,7 @@ UTLib.prototype.addMethod = function(name) {
     t.name = name;
     t.renderer = renderer;
     t.nestedVariables = {
-        vars:[{nameFromAttribute:'var'}],
+        vars: [{nameFromAttribute: 'var'}]
     };
     var a = new Att('*');
     t.addAttribute(a);
@@ -27,12 +27,12 @@ UTLib.prototype.addMethod = function(name) {
     a.type = 'identifier';
     t.addAttribute(a);
     this.addTag(t);
-}
+};
 
 var taglib;
 
 var t = {
-    pattern :  /\$\[([^\]]+)\]/gi,
+    pattern: /\$\[([^\]]+)\]/gi,
     escape: /['\\]/g,
     replace: function(match, label) {
         return '${t(\'' + label.replace(t.escape, '\\$&') + '\')}';
@@ -55,17 +55,19 @@ var t = {
 
 module.exports = function transform(node, compiler, template) {
     var templateType = template.path.split('.').slice(-2)[0];
-    if (node.localName == 'c-template') {
+    if (node.localName === 'c-template') {
         switch (templateType) {
             case 'sql':
                 node.escapeXmlBodyText = false;
+                compiler.options.preserveWhitespace = true;
+                break;
             case 'json':
             case 'csv':
                 compiler.options.preserveWhitespace = true;
-            break;
+                break;
             case 'ussd':
                 compiler.options.preserveWhitespace = false;
-            break;
+                break;
         }
     } else if (node.namespace && node.namespace.startsWith('ut-')) {
         var tagName = node.namespace + ':' + node._localName;
@@ -120,4 +122,4 @@ module.exports = function transform(node, compiler, template) {
         template.addVar('t', 'data.t');
         t.preProcessTemplate(template);
     }
-}
+};

@@ -4,7 +4,6 @@ var Path = require('path');
 var _undefined;
 viewEngine.register('marko', require('./view-engine-marko'));
 var markoCompiler = require('marko/compiler');
-var marko = require('marko');
 var fs = require('fs');
 var requireReload = require('require-reload')(require);
 
@@ -56,43 +55,43 @@ module.exports = {
                 }
                 return render(tmpl, data, language);
             }
-        }
+        };
     },
     compileMarko: function(msg) {
         if (!msg.templateContent) {
             msg.templateContent = '';
         }
-        if(!msg.path) {
+        if (!msg.path) {
             msg.path = '';
         }
-        if(!msg.fileName) {
+        if (!msg.fileName) {
             return when.reject(new Error('not pass fileName'));
         }
-        return when.promise(function (resolve, reject) {
-            var html = markoCompiler.compile(msg.templateContent, require.resolve('./'), function (err, compiledTemplate) {
+        return when.promise(function(resolve, reject) {
+            markoCompiler.compile(msg.templateContent, require.resolve('./'), function(err, compiledTemplate) {
                 if (err) {
                     reject(err);
                 }
                 var template;
                 try {
-                    template = require(Path.resolve('./'+msg.path+'/'+msg.fileName+'.marko'));
-                    if(compiledTemplate.indexOf(template._.toString()) === -1) {
+                    template = require(Path.resolve('./' + msg.path + '/' + msg.fileName + '.marko'));
+                    if (compiledTemplate.indexOf(template._.toString()) === -1) {
                         console.log('There are a difference between marko templates');
-                        throw 'There are a difference between marko templates';
+                        throw new Error('There are a difference between marko templates');
                     }
                     resolve({
-                        render: function(data, language){
+                        render: function(data, language) {
                             return render(template, data, language);
                         }
-                    })
-                } catch(e) {
-                    fs.writeFile(msg.path+'/'+msg.fileName+'.marko.js', compiledTemplate, function(err) {
-                        if(err) {
+                    });
+                } catch (e) {
+                    fs.writeFile(msg.path + '/' + msg.fileName + '.marko.js', compiledTemplate, function(err) {
+                        if (err) {
                             reject(err);
                         }
-                        template = requireReload(Path.resolve('./'+msg.path+'/'+msg.fileName+'.marko'));
+                        template = requireReload(Path.resolve('./' + msg.path + '/' + msg.fileName + '.marko'));
                         resolve({
-                            render : function(data, language){
+                            render: function(data, language) {
                                 return render(template, data, language);
                             }
                         });
@@ -100,17 +99,17 @@ module.exports = {
                 }
             });
         });
-    },
-}
+    }
+};
 
-function render (tmpl, data, language) {
+function render(tmpl, data, language) {
     if (!data) {
         data = {};
     }
-    return when.promise(function (resolve, reject) {
+    return when.promise(function(resolve, reject) {
         tmpl.render({
             params: data,
-            t: function (label) {
+            t: function(label) {
                 return translate(label, language || data.language || 'en');
             },
             $global: {
@@ -119,12 +118,12 @@ function render (tmpl, data, language) {
                 escapeCSV: escapeCSV,
                 escapeJSON: escapeJSON
             }
-        }, function (err, res) {
+        }, function(err, res) {
             if (err) {
-                reject(err)
+                reject(err);
             } else {
                 resolve(res);
             }
         });
-    })
+    });
 }

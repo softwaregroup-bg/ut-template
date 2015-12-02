@@ -9,12 +9,17 @@
   },
   "devDependencies": {
     "falafel": "~1.0.1",
-    "optimizer-marko": "~2.0.0"
+    "optimizer-marko": "~2.0.0",
+    "ut-tools": "~0.5.1"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
   },
   "description": "UT template module.",
+  "scripts": {
+    "lint": "ut-lint .",
+    "test": "npm run lint"
+  },
   "repository": {
     "type": "git",
     "url": "git@git.softwaregroup-bg.com:ut5/ut-template.git"
