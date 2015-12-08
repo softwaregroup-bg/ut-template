@@ -10,7 +10,7 @@
   "devDependencies": {
     "falafel": "~1.0.1",
     "optimizer-marko": "~2.0.0",
-    "ut-tools": "~0.5.1"
+    "ut-tools": "~1.0.0"
   },
   "publishConfig": {
     "registry": "http://npm.softwaregroup-bg.com:5001"
@@ -18,7 +18,10 @@
   "description": "UT template module.",
   "scripts": {
     "lint": "ut-lint .",
-    "test": "npm run lint"
+    "pre-commit": "npm run lint",
+    "pre-release": "ut-pre-release",
+    "release": "ut-release",
+    "post-release": "ut-post-release"
   },
   "repository": {
     "type": "git",
