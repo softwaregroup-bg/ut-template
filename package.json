@@ -2,7 +2,7 @@
   "name": "ut-template",
   "version": "5.3.5",
   "dependencies": {
-    "marko": "^2.7.25",
+    "marko": "~2.7.29",
     "view-engine": "~1.1.0",
     "when": "~3.7.2",
     "require-reload": "^0.2.2"
