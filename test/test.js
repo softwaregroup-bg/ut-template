@@ -1,3 +1,4 @@
+/* eslint no-console:0 */
 require('marko/hot-reload').enable();
 var fs = require('fs');
 fs.existsSync('./test.xml.marko.js') && fs.unlinkSync('./test.xml.marko.js');
@@ -7,7 +8,7 @@ fs.existsSync('./unesc.sql.marko.js') && fs.unlinkSync('./unesc.sql.marko.js');
 fs.existsSync('./t.marko.js') && fs.unlinkSync('./t.marko.js');
 fs.existsSync('./includes/t.marko.js') && fs.unlinkSync('./includes/t.marko.js');
 
-var t = require('ut-template');
+var t = require('../index');
 
 t.init({
     importMethod: function(name) {
@@ -77,7 +78,7 @@ tt.render({}).then(function(res) {
     console.log('\n\n--------------\nnTRANSLATED TEMPLATE error=', err);
 });
 
-t.compile('<sg:container>     000     <ut-security:login var="l" userName="${params.username}">aaa         ' +
+t.compileMarko('<sg:container>     000     <ut-security:login var="l" userName="${params.username}">aaa         ' +
     '<ut-namespace:method var="y" x="${l.result}">bbb                 ${l.result} ccc                 ' +
     '<someTab q="v">test</someTab>                 ${y.result}         </ut-namespace:method>     </ut-security:login>     ddd </sg:container>',
     {username: 'admin'}, 'marko').then(function(res) {

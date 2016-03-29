@@ -76,7 +76,6 @@ module.exports = {
                 try {
                     template = require(Path.resolve('./' + msg.path + '/' + msg.fileName + '.marko'));
                     if (compiledTemplate.indexOf(template._.toString()) === -1) {
-                        console.log('There are a difference between marko templates');
                         throw new Error('There are a difference between marko templates');
                     }
                     resolve({
