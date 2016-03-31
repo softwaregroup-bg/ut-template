@@ -2,14 +2,12 @@
   "name": "ut-template",
   "version": "5.3.8",
   "dependencies": {
-    "marko": "~2.7.29",
-    "view-engine": "~1.1.0",
-    "when": "~3.7.2",
-    "require-reload": "^0.2.2"
+    "marko": "2.7.29",
+    "view-engine": "1.1.0",
+    "when": "3.7.7",
+    "require-reload": "0.2.2"
   },
   "devDependencies": {
-    "falafel": "~1.0.1",
-    "optimizer-marko": "~2.0.0",
     "ut-tools": "^5.3.1"
   },
   "publishConfig": {
