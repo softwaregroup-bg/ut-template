@@ -1,6 +1,6 @@
 'use strict';
 var util = require('util');
-var Taglib = require('marko/compiler/taglib-loader/Taglib');
+var Taglib = require('marko/compiler/taglibs/Taglib');
 var Tag = Taglib.Tag;
 var Att = Taglib.Attribute;
 var renderer = require.resolve('./renderer');
