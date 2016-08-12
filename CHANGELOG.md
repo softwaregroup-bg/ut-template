@@ -1,3 +1,13 @@
+<a name="5.4.4"></a>
+## [5.4.4](https://github.com/softwaregroup-bg/ut-template/compare/v5.4.3...v5.4.4) (2016-08-12)
+
+
+### Bug Fixes
+
+* publish to npm ([6ca10ce](https://github.com/softwaregroup-bg/ut-template/commit/6ca10ce))
+
+
+
 <a name="5.4.3"></a>
 ## [5.4.3](https://git.softwaregroup-bg.com/ut5/ut-template/compare/v5.4.2...v5.4.3) (2016-08-08)
 
