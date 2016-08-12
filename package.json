@@ -8,10 +8,7 @@
     "require-reload": "0.2.2"
   },
   "devDependencies": {
-    "ut-tools": "^5.4.1"
-  },
-  "publishConfig": {
-    "registry": "https://nexus.softwaregroup-bg.com/repository/npm-internal"
+    "ut-tools": "^5.6.0"
   },
   "description": "UT template module.",
   "scripts": {
@@ -35,6 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.softwaregroup-bg.com:ut5/ut-template.git"
-  }
+    "url": "git@github.com:softwaregroup-bg/ut-template.git"
+  },
+  "license": "Apache-2.0"
 }
