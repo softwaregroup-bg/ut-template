@@ -1,8 +1,6 @@
-var when = require('when');
-var viewEngine = require('view-engine');
+var viewEngineMarko = require('./view-engine-marko');
 var Path = require('path');
 var _undefined;
-viewEngine.register('marko', require('./view-engine-marko'));
 var markoCompiler = require('marko/compiler');
 var fs = require('fs');
 var requireReload = require('require-reload')(require);
@@ -47,7 +45,7 @@ module.exports = {
         }
     },
     load: function(template) {
-        var tmpl = viewEngine.load(template);
+        var tmpl = viewEngineMarko().load(template);
         return {
             render: function(data, language) {
                 if (!data) {
@@ -65,9 +63,9 @@ module.exports = {
             msg.path = '';
         }
         if (!msg.fileName) {
-            return when.reject(new Error('not pass fileName'));
+            return Promise.reject(new Error('not pass fileName'));
         }
-        return when.promise(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             markoCompiler.compile(msg.templateContent, require.resolve('./'), function(err, compiledTemplate) {
                 if (err) {
                     reject(err);
@@ -105,7 +103,7 @@ function render(tmpl, data, language) {
     if (!data) {
         data = {};
     }
-    return when.promise(function(resolve, reject) {
+    return new Promise(function(resolve, reject) {
         tmpl.render({
             params: data,
             t: function(label) {
