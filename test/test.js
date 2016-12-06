@@ -94,7 +94,7 @@ tt.render({}).then(function(res) {
 }).catch(function(err) {
     console.log('\n\n--------------\nTRANSLATED TEMPLATE error=', err);
 });
-
+/* eslint no-template-curly-in-string:0 */
 t.compileMarko({templateContent: '<sg:container>     000     <ut-security:login var="l" userName="${params.username}">aaa         ' +
     '<ut-namespace:method var="y" x="${l.result}">bbb                 ${l.result} ccc                 ' +
     '<someTab q="v">test</someTab>                 ${y.result}         </ut-namespace:method>     </ut-security:login>     ddd </sg:container>'}, {
