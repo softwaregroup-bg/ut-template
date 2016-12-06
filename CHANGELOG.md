@@ -1,3 +1,18 @@
+<a name="5.5.0"></a>
+# [5.5.0](https://github.com/softwaregroup-bg/ut-template/compare/v5.4.5...v5.5.0) (2016-12-06)
+
+
+### Bug Fixes
+
+* ignore wrong lint error ([3736f7b](https://github.com/softwaregroup-bg/ut-template/commit/3736f7b))
+
+
+### Features
+
+* remove dependencies ([bda8bed](https://github.com/softwaregroup-bg/ut-template/commit/bda8bed))
+
+
+
 <a name="5.4.5"></a>
 ## [5.4.5](https://github.com/softwaregroup-bg/ut-template/compare/v5.4.4...v5.4.5) (2016-09-21)
 
